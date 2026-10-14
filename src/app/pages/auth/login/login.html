@@ -1,0 +1,42 @@
+<section class="mx-auto max-w-sm px-4 py-16">
+  <h1 class="text-2xl font-semibold" i18n>Kirish</h1>
+
+  <form class="mt-8 space-y-5" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    @if (error(); as message) {
+      <p class="form-alert" role="alert">{{ message }}</p>
+    }
+
+    <label class="block">
+      <span class="form-label" i18n>Email yoki username</span>
+      <input class="form-input" formControlName="login" autocomplete="username" />
+      @if (form.controls.login.touched && form.controls.login.invalid) {
+        <span class="form-error" i18n>Email yoki username kiriting.</span>
+      }
+    </label>
+
+    <label class="block">
+      <span class="form-label" i18n>Parol</span>
+      <input
+        class="form-input"
+        type="password"
+        formControlName="password"
+        autocomplete="current-password"
+      />
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <span class="form-error" i18n>Parolni kiriting.</span>
+      }
+    </label>
+
+    <label class="flex items-center gap-2 text-sm">
+      <input type="checkbox" formControlName="rememberMe" class="size-4" />
+      <span i18n>Meni eslab qol</span>
+    </label>
+
+    <button class="form-button" type="submit" [disabled]="submitting()" i18n>Kirish</button>
+  </form>
+
+  <p class="mt-6 text-sm text-slate-600 dark:text-slate-400">
+    <span i18n>Akkauntingiz yo'qmi?</span>
+    <a routerLink="/register" class="form-link" i18n>Ro'yxatdan o'ting</a>
+  </p>
+</section>

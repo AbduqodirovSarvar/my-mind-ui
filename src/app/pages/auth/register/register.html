@@ -1,0 +1,74 @@
+<section class="mx-auto max-w-sm px-4 py-16">
+  <h1 class="text-2xl font-semibold" i18n>Ro'yxatdan o'tish</h1>
+
+  <form class="mt-8 space-y-5" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    @if (error(); as message) {
+      <p class="form-alert" role="alert">{{ message }}</p>
+    }
+
+    <label class="block">
+      <span class="form-label">Email</span>
+      <input class="form-input" type="email" formControlName="email" autocomplete="email" />
+      @if (fieldError('email'); as message) {
+        <span class="form-error">{{ message }}</span>
+      } @else if (form.controls.email.touched && form.controls.email.invalid) {
+        <span class="form-error" i18n>To'g'ri email kiriting.</span>
+      }
+    </label>
+
+    <label class="block">
+      <span class="form-label">Username</span>
+      <input class="form-input" formControlName="userName" autocomplete="username" />
+      <span class="form-hint" i18n>3–30 belgi: kichik lotin harflari, raqamlar va _</span>
+      @if (fieldError('userName'); as message) {
+        <span class="form-error">{{ message }}</span>
+      } @else if (form.controls.userName.touched && form.controls.userName.invalid) {
+        <span class="form-error" i18n>Username talablarga mos emas.</span>
+      }
+    </label>
+
+    <label class="block">
+      <span class="form-label" i18n>Ko'rinadigan ism (ixtiyoriy)</span>
+      <input class="form-input" formControlName="displayName" autocomplete="name" />
+    </label>
+
+    <label class="block">
+      <span class="form-label" i18n>Parol</span>
+      <input
+        class="form-input"
+        type="password"
+        formControlName="password"
+        autocomplete="new-password"
+      />
+      @if (fieldError('password'); as message) {
+        <span class="form-error">{{ message }}</span>
+      } @else if (form.controls.password.touched && form.controls.password.invalid) {
+        <span class="form-error" i18n
+          >Parol kamida {{ passwordMinLength }} belgidan iborat bo'lishi kerak.</span
+        >
+      }
+    </label>
+
+    <label class="flex items-start gap-2 text-sm">
+      <input type="checkbox" formControlName="acceptTerms" class="mt-0.5 size-4" />
+      <span i18n
+        ><a routerLink="/terms" class="form-link">Foydalanish shartlari</a> va
+        <a routerLink="/privacy" class="form-link">maxfiylik siyosati</a>ga roziman</span
+      >
+    </label>
+    @if (fieldError('acceptTerms'); as message) {
+      <span class="form-error">{{ message }}</span>
+    } @else if (form.controls.acceptTerms.touched && form.controls.acceptTerms.invalid) {
+      <span class="form-error" i18n>Davom etish uchun shartlarga rozilik bering.</span>
+    }
+
+    <button class="form-button" type="submit" [disabled]="submitting()" i18n>
+      Ro'yxatdan o'tish
+    </button>
+  </form>
+
+  <p class="mt-6 text-sm text-slate-600 dark:text-slate-400">
+    <span i18n>Akkauntingiz bormi?</span>
+    <a routerLink="/login" class="form-link" i18n>Kirish</a>
+  </p>
+</section>
