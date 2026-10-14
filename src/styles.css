@@ -1,0 +1,4 @@
+@import 'tailwindcss';
+
+/* Dark mode is toggled by a class on <html> (set from a cookie during SSR, see plan §9.2). */
+@custom-variant dark (&:where(.dark, .dark *));
