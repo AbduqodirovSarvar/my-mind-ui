@@ -1,0 +1,82 @@
+<section class="mx-auto max-w-3xl px-4 py-12">
+  <h1 class="text-2xl font-semibold" i18n>Mening maqolalarim</h1>
+
+  @if (error(); as message) {
+    <p class="form-alert mt-6" role="alert">{{ message }}</p>
+  }
+
+  @if (!loading()) {
+    @if (categoryOptions().length === 0) {
+      <form
+        class="mt-8 rounded-md border border-slate-200 p-4 dark:border-slate-800"
+        [formGroup]="categoryForm"
+        (ngSubmit)="createCategory()"
+      >
+        <p class="text-sm" i18n>Maqola yozish uchun avval kategoriya yarating.</p>
+        <div class="mt-3 flex gap-2">
+          <input
+            class="form-input mt-0"
+            formControlName="name"
+            i18n-placeholder
+            placeholder="Masalan: Backend"
+          />
+          <button type="submit" class="form-button w-auto" i18n>Yaratish</button>
+        </div>
+      </form>
+    } @else {
+      <form
+        class="mt-8 flex flex-wrap items-end gap-3 rounded-md border border-slate-200 p-4 dark:border-slate-800"
+        [formGroup]="articleForm"
+        (ngSubmit)="createArticle()"
+      >
+        <label class="block min-w-40 flex-1">
+          <span class="form-label" i18n>Kategoriya</span>
+          <select class="form-input" formControlName="categoryId">
+            @for (option of categoryOptions(); track option.id) {
+              <option [value]="option.id">{{ option.label }}</option>
+            }
+          </select>
+        </label>
+        <label class="block min-w-60 flex-[2]">
+          <span class="form-label" i18n>Sarlavha</span>
+          <input
+            class="form-input"
+            formControlName="title"
+            i18n-placeholder
+            placeholder="Nomsiz maqola"
+          />
+        </label>
+        <button type="submit" class="form-button w-auto" i18n>Yangi maqola</button>
+      </form>
+
+      <form class="mt-3 flex gap-2" [formGroup]="categoryForm" (ngSubmit)="createCategory()">
+        <input
+          class="form-input mt-0 max-w-xs"
+          formControlName="name"
+          i18n-placeholder
+          placeholder="Yangi kategoriya nomi"
+        />
+        <button type="submit" class="form-link text-sm" i18n>+ kategoriya</button>
+      </form>
+    }
+
+    <ul class="mt-10 divide-y divide-slate-200 dark:divide-slate-800">
+      @for (article of articles(); track article.id) {
+        <li class="flex items-center justify-between gap-4 py-3">
+          <a
+            [routerLink]="['/me/articles', article.id, 'edit']"
+            class="font-medium hover:underline"
+          >
+            {{ article.title }}
+          </a>
+          <span class="flex shrink-0 items-center gap-3 text-xs text-slate-500">
+            <app-status-badge [status]="article.status" />
+            {{ article.updatedAt | date: 'dd.MM.yyyy HH:mm' }}
+          </span>
+        </li>
+      } @empty {
+        <li class="py-6 text-sm text-slate-500" i18n>Hali maqola yo'q.</li>
+      }
+    </ul>
+  }
+</section>

@@ -1,0 +1,146 @@
+<section class="mx-auto max-w-4xl px-4 py-8">
+  <a routerLink="/me/articles" class="text-sm text-slate-500 hover:underline" i18n>← Maqolalarim</a>
+
+  @if (loadError(); as message) {
+    <p class="form-alert mt-6" role="alert">{{ message }}</p>
+  }
+
+  @if (article(); as current) {
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3 text-sm">
+        <app-status-badge [status]="current.status" />
+        @switch (saveState()) {
+          @case ('saving') {
+            <span class="text-slate-500" i18n>Saqlanmoqda…</span>
+          }
+          @case ('dirty') {
+            <span class="text-slate-500" i18n>O'zgarishlar bor</span>
+          }
+          @case ('error') {
+            <span class="text-red-600 dark:text-red-400" i18n
+              >Saqlanmadi — qayta urinilmoqda. Ishingiz shu qurilmada saqlangan.</span
+            >
+          }
+          @case ('conflict') {
+            <span class="text-red-600 dark:text-red-400" i18n
+              >Maqola boshqa oynada o'zgartirilgan. Sahifani yangilang — bu yerdagi matn shu
+              qurilmada saqlab qolindi.</span
+            >
+          }
+          @default {
+            @if (lastSavedAt(); as savedAt) {
+              <span class="text-slate-500" i18n>Saqlandi, {{ savedAt | date: 'HH:mm' }}</span>
+            }
+          }
+        }
+        @if (current.hasUnpublishedChanges) {
+          <span class="text-amber-700 dark:text-amber-400" i18n
+            >E'lon qilinmagan o'zgarishlar bor</span
+          >
+        }
+      </div>
+
+      <div class="flex gap-2">
+        @if (current.status === 'Published') {
+          <button
+            type="button"
+            class="form-link text-sm"
+            [disabled]="busy()"
+            (click)="unpublish()"
+            i18n
+          >
+            Yashirish
+          </button>
+        }
+        <button
+          type="button"
+          class="form-button w-auto"
+          [disabled]="busy() || !canPublish()"
+          (click)="publish()"
+        >
+          @if (current.status === 'Published') {
+            <ng-container i18n>Yangilash</ng-container>
+          } @else {
+            <ng-container i18n>E'lon qilish</ng-container>
+          }
+        </button>
+      </div>
+    </div>
+
+    @if (notice(); as message) {
+      <p class="mt-3 text-sm text-emerald-700 dark:text-emerald-400" role="status">
+        {{ message }}
+        @if (current.status === 'Published' && auth.user(); as user) {
+          <span class="text-slate-500">/&#64;{{ user.userName }}/…/{{ current.slug }}</span>
+        }
+      </p>
+    }
+    @if (actionError(); as message) {
+      <p class="form-alert mt-3" role="alert">{{ message }}</p>
+    }
+
+    @if (pendingBackup(); as backup) {
+      <div class="form-alert mt-4 flex flex-wrap items-center gap-3">
+        <span i18n
+          >Bu qurilmada saqlanmagan o'zgarishlar topildi ({{
+            backup.savedAt | date: 'dd.MM HH:mm'
+          }}).</span
+        >
+        <button type="button" class="form-link" (click)="restoreBackup()" i18n>Tiklash</button>
+        <button type="button" class="form-link" (click)="discardBackup()" i18n>Bekor qilish</button>
+      </div>
+    }
+
+    <input
+      class="mt-6 w-full bg-transparent text-3xl font-semibold outline-none placeholder:text-slate-400"
+      [ngModel]="title()"
+      (ngModelChange)="onTitleChange($event)"
+      maxlength="200"
+      i18n-placeholder
+      placeholder="Sarlavha"
+      i18n-aria-label
+      aria-label="Sarlavha"
+    />
+
+    <app-article-editor
+      class="mt-2"
+      [content]="current.draftContent"
+      (contentChange)="onContentChange($event)"
+    />
+
+    <details class="mt-10 rounded-md border border-slate-200 p-4 dark:border-slate-800">
+      <summary class="cursor-pointer text-sm font-medium" i18n>Maqola sozlamalari</summary>
+      <form class="mt-4 grid gap-4 sm:grid-cols-2" (ngSubmit)="saveMeta()">
+        <label class="block">
+          <span class="form-label" i18n>Kategoriya</span>
+          <select class="form-input" name="categoryId" [(ngModel)]="meta.categoryId">
+            @for (option of categories(); track option.id) {
+              <option [value]="option.id">{{ option.label }}</option>
+            }
+          </select>
+        </label>
+        <label class="block">
+          <span class="form-label">Slug</span>
+          <input class="form-input font-mono" name="slug" [(ngModel)]="meta.slug" maxlength="80" />
+          <span class="form-hint" i18n
+            >E'lon qilingandan keyin o'zgartirsangiz, eski havola yangisiga yo'naltiriladi.</span
+          >
+        </label>
+        <label class="block sm:col-span-2">
+          <span class="form-label" i18n>Qisqacha mazmun (ixtiyoriy)</span>
+          <textarea
+            class="form-input"
+            name="excerpt"
+            rows="2"
+            maxlength="300"
+            [(ngModel)]="meta.excerpt"
+          ></textarea>
+          <span class="form-hint" i18n>Bo'sh qolsa, matnning boshidan avtomatik olinadi.</span>
+        </label>
+        <div>
+          <button type="submit" class="form-button w-auto" [disabled]="busy()" i18n>Saqlash</button>
+        </div>
+      </form>
+    </details>
+  }
+</section>

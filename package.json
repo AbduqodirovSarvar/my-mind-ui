@@ -20,6 +20,12 @@
     "@angular/platform-server": "^22.2.0",
     "@angular/router": "^22.2.0",
     "@angular/ssr": "^22.2.2",
+    "@tiptap/core": "^3.32.0",
+    "@tiptap/extension-image": "^3.32.0",
+    "@tiptap/extension-table": "^3.32.0",
+    "@tiptap/extensions": "^3.32.0",
+    "@tiptap/pm": "^3.32.0",
+    "@tiptap/starter-kit": "^3.32.0",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"

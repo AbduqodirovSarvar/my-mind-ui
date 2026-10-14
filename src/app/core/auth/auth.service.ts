@@ -48,8 +48,9 @@ export class AuthService {
 
   private async fetchCurrentUser(): Promise<void> {
     try {
+      // 200 with the user when signed in, 204 (no body) for anonymous visitors.
       this.currentUser.set(
-        await firstValueFrom(this.http.get<CurrentUser>(`${this.baseUrl}/auth/me`)),
+        await firstValueFrom(this.http.get<CurrentUser | null>(`${this.baseUrl}/auth/me`)),
       );
     } catch (error) {
       this.currentUser.set(null);

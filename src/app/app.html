@@ -7,6 +7,7 @@
       @if (auth.loaded()) {
         <div class="flex items-center gap-4 text-sm">
           @if (auth.user(); as user) {
+            <a routerLink="/me/articles" class="hover:underline" i18n>Maqolalarim</a>
             <a routerLink="/me" class="hover:underline">&#64;{{ user.userName }}</a>
             <button type="button" class="hover:underline" (click)="logout()" i18n>Chiqish</button>
           } @else {

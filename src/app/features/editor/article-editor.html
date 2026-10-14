@@ -1,0 +1,175 @@
+<div
+  class="sticky top-0 z-10 flex flex-wrap items-center gap-1 border-b border-slate-200 bg-white/95 py-2 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95"
+  role="toolbar"
+  i18n-aria-label
+  aria-label="Matn formatlash"
+  (mousedown)="keepEditorFocus($event)"
+>
+  @if (editor()) {
+    <button
+      type="button"
+      class="tool"
+      [class.tool-on]="isActive('heading', { level: 2 })"
+      (click)="chain().toggleHeading({ level: 2 }).run()"
+    >
+      H2
+    </button>
+    <button
+      type="button"
+      class="tool"
+      [class.tool-on]="isActive('heading', { level: 3 })"
+      (click)="chain().toggleHeading({ level: 3 }).run()"
+    >
+      H3
+    </button>
+    <span class="tool-sep"></span>
+    <button
+      type="button"
+      class="tool font-bold"
+      [class.tool-on]="isActive('bold')"
+      (click)="chain().toggleBold().run()"
+      i18n-title
+      title="Qalin"
+    >
+      B
+    </button>
+    <button
+      type="button"
+      class="tool italic"
+      [class.tool-on]="isActive('italic')"
+      (click)="chain().toggleItalic().run()"
+      i18n-title
+      title="Kursiv"
+    >
+      I
+    </button>
+    <button
+      type="button"
+      class="tool underline"
+      [class.tool-on]="isActive('underline')"
+      (click)="chain().toggleUnderline().run()"
+      i18n-title
+      title="Tagiga chizish"
+    >
+      U
+    </button>
+    <button
+      type="button"
+      class="tool line-through"
+      [class.tool-on]="isActive('strike')"
+      (click)="chain().toggleStrike().run()"
+      i18n-title
+      title="Ustidan chizish"
+    >
+      S
+    </button>
+    <button
+      type="button"
+      class="tool font-mono"
+      [class.tool-on]="isActive('code')"
+      (click)="chain().toggleCode().run()"
+      i18n-title
+      title="Kod"
+    >
+      &lt;/&gt;
+    </button>
+    <button type="button" class="tool" [class.tool-on]="isActive('link')" (click)="setLink()" i18n>
+      Havola
+    </button>
+    <span class="tool-sep"></span>
+    <button
+      type="button"
+      class="tool"
+      [class.tool-on]="isActive('bulletList')"
+      (click)="chain().toggleBulletList().run()"
+      i18n-title
+      title="Ro'yxat"
+    >
+      •
+    </button>
+    <button
+      type="button"
+      class="tool"
+      [class.tool-on]="isActive('orderedList')"
+      (click)="chain().toggleOrderedList().run()"
+      i18n-title
+      title="Raqamli ro'yxat"
+    >
+      1.
+    </button>
+    <button
+      type="button"
+      class="tool"
+      [class.tool-on]="isActive('blockquote')"
+      (click)="chain().toggleBlockquote().run()"
+      i18n
+    >
+      Iqtibos
+    </button>
+    <button
+      type="button"
+      class="tool"
+      [class.tool-on]="isActive('codeBlock')"
+      (click)="chain().toggleCodeBlock().run()"
+      i18n
+    >
+      Kod bloki
+    </button>
+    <span class="tool-sep"></span>
+    <label class="tool cursor-pointer" i18n>
+      Rasm
+      <input
+        #imageInput
+        type="file"
+        accept="image/jpeg,image/png,image/gif,image/webp"
+        multiple
+        class="sr-only"
+        (change)="pickImages(imageInput)"
+      />
+    </label>
+    <button type="button" class="tool" (click)="insertVideo()" i18n>Video</button>
+    <button
+      type="button"
+      class="tool"
+      (click)="chain().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()"
+      i18n
+    >
+      Jadval
+    </button>
+    @if (isActive('table')) {
+      <button type="button" class="tool" (click)="chain().addRowAfter().run()" i18n>+ qator</button>
+      <button type="button" class="tool" (click)="chain().addColumnAfter().run()" i18n>
+        + ustun
+      </button>
+      <button type="button" class="tool" (click)="chain().deleteTable().run()" i18n>
+        Jadvalni o'chirish
+      </button>
+    }
+    <span class="tool-sep"></span>
+    <button
+      type="button"
+      class="tool"
+      (click)="chain().undo().run()"
+      i18n-title
+      title="Bekor qilish"
+    >
+      ↶
+    </button>
+    <button type="button" class="tool" (click)="chain().redo().run()" i18n-title title="Qaytarish">
+      ↷
+    </button>
+  }
+</div>
+
+@if (error(); as message) {
+  <p class="form-alert mt-3" role="alert">{{ message }}</p>
+}
+@if (uploading() > 0) {
+  <p class="mt-3 text-sm text-slate-500" i18n>Rasm yuklanmoqda…</p>
+}
+
+<div #editorHost class="mt-4"></div>
+
+@if (editor()) {
+  <p class="mt-4 text-right text-xs text-slate-500" i18n>{{ characters() }} / 100 000 belgi</p>
+}

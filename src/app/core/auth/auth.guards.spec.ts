@@ -36,7 +36,7 @@ describe('authGuard', () => {
 
     TestBed.inject(HttpTestingController)
       .expectOne('/api/auth/me')
-      .flush(null, { status: 401, statusText: 'Unauthorized' });
+      .flush(null, { status: 204, statusText: 'No Content' });
 
     expect(String(await result)).toBe('/login?returnUrl=%2Fme');
   });

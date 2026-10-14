@@ -38,6 +38,16 @@ describe('AuthService', () => {
     expect(auth.loaded()).toBe(true);
   });
 
+  it('treats 204 from /me as an anonymous visitor', async () => {
+    const loading = auth.ensureLoaded();
+
+    http.expectOne('/api/auth/me').flush(null, { status: 204, statusText: 'No Content' });
+    await loading;
+
+    expect(auth.user()).toBeNull();
+    expect(auth.loaded()).toBe(true);
+  });
+
   it('treats 401 from /me as signed out', async () => {
     const loading = auth.ensureLoaded();
 
